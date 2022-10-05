@@ -1,5 +1,8 @@
 package org.pba;
 
+import org.w3c.dom.ls.LSOutput;
+
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -7,6 +10,7 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -29,20 +33,22 @@ public class Person {
     public Person() {
     }
 
-    public int cprGenerator(String gender){
+    public String cprGenerator(String gender){
         LocalDate birthDate = birthDate();
         int endRange = 9999;
         int startRange = 1000;
-        int lastDigit;
+        int lastDigit = 0;
 
         if(gender.equals("female")){
             Random evenRandom = new Random();
             lastDigit = startRange + evenRandom.nextInt((endRange - startRange) / 2) * 2;
-        }else {
+        }else if(gender.equals("male")) {
             Random oddRandom = new Random();
             lastDigit = startRange + oddRandom.nextInt((endRange - startRange) / 2) * 2 + 1;
         }
-        return lastDigit;
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern( "ddMMuu" , Locale.UK );
+
+        return dateTimeFormatter.format(birthDate) + "-" + lastDigit;
     }
 
     public LocalDate birthDate(){
