@@ -2,6 +2,7 @@ package org.pba;
 
 import org.w3c.dom.ls.LSOutput;
 
+import java.sql.*;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -9,20 +10,22 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Person {
 
     private String firstName;
     private String lastName;
     private String gender;
-
     private int cpr;
-
     private int phoneNumber;
+    private String address;
 
     public Person(String firstName, String lastName, String gender) {
         this.firstName = firstName;
@@ -31,6 +34,49 @@ public class Person {
     }
 
     public Person() {
+    }
+
+    public String fakeAddress() throws SQLException, ClassNotFoundException {
+        String alphabet = "abcdefghijklmnopqrstuvwxyz";
+
+        //Random values
+        int number = new Random().nextInt(999) + 1;
+        int floorNumber = new Random().nextInt(999) + 1;
+        int door = new Random().nextInt(50) + 1;
+
+        String upperLetter = String.valueOf(Character.toUpperCase(alphabet.charAt(new Random().nextInt(alphabet.length()))));
+        String floorString = "";
+
+        StringBuilder sb = new StringBuilder();
+        int streetLength = new Random().nextInt(27) + 1;
+        for (int i = 0; i < streetLength; i++) {
+            sb.append(alphabet).charAt(new Random().nextInt(alphabet.length()));
+        }
+
+        if(floorNumber == 1){
+            floorString = floorNumber + "st";
+        } else {
+            floorString = String.valueOf(floorNumber);
+        }
+
+        //TODO: Door. “th”, “mf”, “tv”, a number from 1 to 50,
+        // or alowercase letter optionally followed by a dash,
+        // then followed by one to three numeric digits (e.g., c3, d-14)
+        //if(){
+        //}
+
+        //Database connection
+        DatabaseConnection con = new DatabaseConnection("jdbc:mysql://localhost:3307/addresses");
+
+        //Database query
+        Statement st = con.getConnection().createStatement();
+        ResultSet result = st.executeQuery("SELECT * FROM postal_code ORDER BY Rand() LIMIT 1");
+        result.next();
+        String cPostalCode = result.getString(1);
+        String cTownName = result.getString(2);
+        con.getConnection().close();
+
+        return sb + " " + number + upperLetter + ", " + cPostalCode + " " + cTownName;
     }
 
     public String cprGenerator(String gender){
