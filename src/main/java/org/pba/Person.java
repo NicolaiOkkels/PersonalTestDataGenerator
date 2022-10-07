@@ -37,34 +37,6 @@ public class Person {
     }
 
     public String fakeAddress() throws SQLException, ClassNotFoundException {
-        String alphabet = "abcdefghijklmnopqrstuvwxyz";
-
-        //Random values
-        int number = new Random().nextInt(999) + 1;
-        int floorNumber = new Random().nextInt(999) + 1;
-        int door = new Random().nextInt(50) + 1;
-
-        String upperLetter = String.valueOf(Character.toUpperCase(alphabet.charAt(new Random().nextInt(alphabet.length()))));
-        String floorString = "";
-
-        StringBuilder sb = new StringBuilder();
-        int streetLength = new Random().nextInt(27) + 1;
-        for (int i = 0; i < streetLength; i++) {
-            sb.append(alphabet).charAt(new Random().nextInt(alphabet.length()));
-        }
-
-        if(floorNumber == 1){
-            floorString = floorNumber + "st";
-        } else {
-            floorString = String.valueOf(floorNumber);
-        }
-
-        //TODO: Door. “th”, “mf”, “tv”, a number from 1 to 50,
-        // or alowercase letter optionally followed by a dash,
-        // then followed by one to three numeric digits (e.g., c3, d-14)
-        //if(){
-        //}
-
         //Database connection
         DatabaseConnection con = new DatabaseConnection("jdbc:mysql://localhost:3307/addresses");
 
@@ -76,10 +48,29 @@ public class Person {
         String cTownName = result.getString(2);
         con.getConnection().close();
 
-        return sb + " " + number + upperLetter + ", " + cPostalCode + " " + cTownName;
+        String alphabet = "abcdefghijklmnopqrstuvwxyz";
+
+        StringBuilder sb = new StringBuilder();
+        int streetLength = new Random().nextInt(27) + 1;
+        for (int i = 0; i < streetLength; i++) {
+            sb.append(alphabet.charAt(new Random().nextInt(alphabet.length())));
+        }
+
+        int number = new Random().nextInt(999) + 1;
+        int bool = new Random().nextInt(2) + 1;
+
+        if(bool == 1){
+            String upperLetter = String.valueOf(Character.toUpperCase(alphabet.charAt(new Random().nextInt(alphabet.length()))));
+            return sb + " " + number + upperLetter + " - " + cPostalCode + " " + cTownName;
+        } else {
+            int floorNumber = new Random().nextInt(99) + 1;
+            String[] s = {"mv", "tv", "th"};
+            String randomString = s[new Random().nextInt(s.length)];
+            return sb + ", " + number + ". " + floorNumber + " " + randomString + "." + " - " + cPostalCode + " " + cTownName;
+        }
     }
 
-    public String cprGenerator(String gender){
+    public String fakeCPR(String gender){
         LocalDate birthDate = birthDate();
         int endRange = 9999;
         int startRange = 1000;
@@ -109,7 +100,7 @@ public class Person {
         return randomDate;
     }
 
-    public int phoneNumberGenerator(){
+    public int fakePhoneNumber(){
 
         int[] startDigitsCombinations = {2,30,31,40,41,42,50,51,52,53,
                 60,61,71,81,91,92,93,342,344,349,356,357,
@@ -121,9 +112,8 @@ public class Person {
                 693,694,697,771,772,782,783,785,786,788,789,
                 826,827,829
         };
-        Random random = new Random();
 
-        int i = random.nextInt(startDigitsCombinations.length);
+        int i = new Random().nextInt(startDigitsCombinations.length);
         int startDigit = startDigitsCombinations[i];
         int endDigit;
 
