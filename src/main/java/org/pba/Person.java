@@ -66,7 +66,7 @@ public class Person {
             int floorNumber = new Random().nextInt(99) + 1;
             String[] s = {"mv", "tv", "th"};
             String randomString = s[new Random().nextInt(s.length)];
-            return sb + ", " + number + ". " + floorNumber + " " + randomString + "." + " - " + cPostalCode + " " + cTownName;
+            return sb + " " + number + ". " + floorNumber + " " + randomString + "." + " - " + cPostalCode + " " + cTownName;
         }
     }
 
