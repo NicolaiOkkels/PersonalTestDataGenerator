@@ -1,7 +1,14 @@
 package org.pba;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.w3c.dom.ls.LSOutput;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.*;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -23,17 +30,39 @@ public class Person {
     private String firstName;
     private String lastName;
     private String gender;
-    private int cpr;
+    private String cpr;
     private int phoneNumber;
     private String address;
+    private LocalDate birthDate;
 
-    public Person(String firstName, String lastName, String gender) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public Person() throws IOException, ParseException, SQLException, ClassNotFoundException {
+        JSONObject jsonObject = parseJsonPerson();
+        String name = (String) jsonObject.get("name");
+        String surname = (String) jsonObject.get("surname");
+        String gender = (String) jsonObject.get("gender");
+
+        this.firstName = name;
+        this.lastName = surname;
         this.gender = gender;
+        this.cpr = fakeCPR(gender);
+        this.phoneNumber = fakePhoneNumber();
+        this.address = fakeAddress();
+        this.birthDate = birthDate();
     }
 
-    public Person() {
+    public JSONObject parseJsonPerson() throws IOException, ParseException {
+        Random random = new Random();
+        // parsing file "JSONExample.json"
+        Object obj = new JSONParser().parse(new FileReader("src/main/resources/jSONFiles/person-names.json"));
+
+        // typecasting obj to JSONObject
+        JSONObject jsonObject = (JSONObject) obj;
+
+        JSONArray persons = (JSONArray) jsonObject.get("persons");
+        int i = random.nextInt(persons.size())+1;
+        JSONObject person = (JSONObject) persons.get(i);
+
+        return person;
     }
 
     public String fakeAddress() throws SQLException, ClassNotFoundException {
@@ -126,5 +155,33 @@ public class Person {
         }
 
         return Integer.parseInt(String.valueOf(startDigit) + String.valueOf(endDigit));
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public String getCpr() {
+        return cpr;
+    }
+
+    public int getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
     }
 }

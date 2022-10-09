@@ -14,33 +14,11 @@ import java.util.Iterator;
 import java.util.Random;
 
 public class Main {
-    public static void main(String[] args) throws IOException, ParseException {
+    public static void main(String[] args) throws IOException, ParseException, SQLException, ClassNotFoundException {
 
-        Random random = new Random();
-        // parsing file "JSONExample.json"
-        Object obj = new JSONParser().parse(new FileReader("src/main/resources/jSONFiles/person-names.json"));
-
-        // typecasting obj to JSONObject
-        JSONObject jo = (JSONObject) obj;
-
-        // getting firstName and lastName
-        //String firstName = (String) jo.get("name");
-
-        JSONArray ja = (JSONArray) jo.get("persons");
-        int pos = random.nextInt(ja.size())+1;
-        JSONObject newJO = (JSONObject) ja.get(pos);
-        String name = (String) newJO.get("name");
-        String surname = (String) newJO.get("surname");
-        String gender = (String) newJO.get("gender");
-        System.out.println(newJO);
-        System.out.println(name);
-        System.out.println(surname);
-        System.out.println(gender);
-        String persons = ja.toJSONString();
-        //System.out.println(persons);
-
-
-
-
+        for (int i = 0; i < 100; i++) {
+            Person person = new Person();
+            System.out.println(person.getCpr() + " ," + person.getFirstName() + " " + person.getLastName() + ", " + person.getGender() + ", " + person.getBirthDate() + ", " + person.getAddress() + ", " + person.getPhoneNumber());
+        }
     }
 }

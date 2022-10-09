@@ -1,8 +1,10 @@
 package org.pba;
 
+import org.json.simple.parser.ParseException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,7 +14,7 @@ class PersonTest {
     Person person;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws SQLException, IOException, ParseException, ClassNotFoundException {
         person = new Person();
     }
 
