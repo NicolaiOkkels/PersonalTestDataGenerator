@@ -17,10 +17,8 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
+import java.util.*;
 import java.util.Date;
-import java.util.Locale;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -103,32 +101,33 @@ public class Person {
 
     public String fakeCPR(String gender){
         LocalDate birthDate = birthDate();
-        int endRange = 9999;
-        int startRange = 1000;
-        int lastDigit = 0;
+        int i = 0;
+        Random r = new Random();
 
         if(gender.equals("female")){
-            Random evenRandom = new Random();
-            lastDigit = startRange + evenRandom.nextInt((endRange - startRange) / 2) * 2;
+            Set<Integer> evenNumbers = IntStream.rangeClosed(1000, 9999)
+                    .filter(n -> n % 2 == 0).boxed().collect(Collectors.toSet());
+            i = (int) evenNumbers.toArray()[r.nextInt(evenNumbers.size())];
         }else if(gender.equals("male")) {
-            Random oddRandom = new Random();
-            lastDigit = startRange + oddRandom.nextInt((endRange - startRange) / 2) * 2 + 1;
+            Set<Integer> evenNumbers = IntStream.rangeClosed(1000, 9999)
+                    .filter(n -> n % 2 == 1).boxed().collect(Collectors.toSet());
+            i = (int) evenNumbers.toArray()[r.nextInt(evenNumbers.size())];
+        } else {
+            return null;
         }
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern( "ddMMuu" , Locale.UK );
 
-        return dateTimeFormatter.format(birthDate) + "-" + lastDigit;
+        return dateTimeFormatter.format(birthDate) + "-" + i;
     }
 
     public LocalDate birthDate(){
         LocalDate startDate = LocalDate.of(1900, 1, 1);
 
         int days = (int) ChronoUnit.DAYS.between(startDate, LocalDate.now());
-        int randomDays = new Random().nextInt(days);
+        Random random = new Random();
+        int rDays = random.nextInt(days);
 
-        LocalDate randomDate = startDate.plusDays(
-                ThreadLocalRandom.current().nextInt(randomDays));
-
-        return randomDate;
+        return startDate.plusDays(ThreadLocalRandom.current().nextInt(rDays));
     }
 
     public int fakePhoneNumber(){
@@ -185,5 +184,9 @@ public class Person {
 
     public LocalDate getBirthDate() {
         return birthDate;
+    }
+
+    public void setCpr(String cpr) {
+        this.cpr = cpr;
     }
 }
