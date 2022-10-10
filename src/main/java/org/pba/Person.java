@@ -67,6 +67,7 @@ public class Person {
 
     public String fakeAddress() throws SQLException, ClassNotFoundException {
         //Database connection
+        /*
         DatabaseConnection con = new DatabaseConnection("jdbc:mysql://localhost:3307/addresses");
 
         //Database query
@@ -76,6 +77,7 @@ public class Person {
         String cPostalCode = result.getString(1);
         String cTownName = result.getString(2);
         con.getConnection().close();
+         */
 
         String alphabet = "abcdefghijklmnopqrstuvwxyz";
 
@@ -90,12 +92,12 @@ public class Person {
 
         if(bool == 1){
             String upperLetter = String.valueOf(Character.toUpperCase(alphabet.charAt(new Random().nextInt(alphabet.length()))));
-            return sb + " " + number + upperLetter + " - " + cPostalCode + " " + cTownName;
+            return sb + " " + number + upperLetter + " - "; //+cPostalCode + " " + cTownName;
         } else {
             int floorNumber = new Random().nextInt(99) + 1;
             String[] s = {"mv", "tv", "th"};
             String randomString = s[new Random().nextInt(s.length)];
-            return sb + " " + number + ". " + floorNumber + " " + randomString + "." + " - " + cPostalCode + " " + cTownName;
+            return sb + " " + number + ". " + floorNumber + " " + randomString + "." + " - "; //+cPostalCode + " " + cTownName;
         }
     }
 
