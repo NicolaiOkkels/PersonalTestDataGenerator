@@ -21,24 +21,17 @@ public class Main {
         System.out.println("Input number of fake person to generate: ");
         int bulk = input.nextInt();
 
-        for (int i = 0; i < bulk; i++) {
-            Person person = new Person();
-            System.out.println("CPR: " + person.getCpr() + ", Name: " + person.getFirstName() + " " + person.getLastName() + ", " + person.getGender() + ", " + person.getBirthDate() + ", " + person.getAddress() + ", " + person.getPhoneNumber());
-        }
-
-        input.close();
-/*
-        CSVWriter csvWriter = new CSVWriter(new FileWriter("example.csv"));
+        CSVWriter csvWriter = new CSVWriter(new FileWriter("personal-test-data.csv"));
 
         List<String[]> rows = new LinkedList<String[]>();
-        rows.add(new String[]{"1", "jan", "Male", "20"});
-        rows.add(new String[]{"2", "con", "Male", "24"});
-        rows.add(new String[]{"3", "jane", "Female", "18"});
-        rows.add(new String[]{"4", "ryo", "Male", "28"});
+        for (int i = 0; i < bulk; i++) {
+            Person person = new Person();
+            rows.add(new String[]{person.getCpr(), person.getFirstName() + " " + person.getLastName(), person.getGender(), String.valueOf(person.getBirthDate()), person.getAddress(), String.valueOf(person.getPhoneNumber())});
+        }
         csvWriter.writeAll(rows);
 
         csvWriter.close();
 
- */
+        input.close();
     }
 }
