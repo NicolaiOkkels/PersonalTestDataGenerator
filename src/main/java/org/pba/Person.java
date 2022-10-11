@@ -44,7 +44,7 @@ public class Person {
         this.gender = gender;
         this.cpr = fakeCPR(gender);
         this.phoneNumber = fakePhoneNumber();
-        this.address = fakeAddress();
+        //this.address = fakeAddress();
         this.birthDate = birthDate();
     }
 
@@ -63,7 +63,7 @@ public class Person {
         return person;
     }
 
-    public String fakeAddress() throws SQLException, ClassNotFoundException {
+    public String fakeAddress(int number, int floorNumber, String door) throws SQLException, ClassNotFoundException {
         //Database connection
         /*
         DatabaseConnection con = new DatabaseConnection("jdbc:mysql://localhost:3307/addresses");
@@ -85,6 +85,15 @@ public class Person {
             sb.append(alphabet.charAt(new Random().nextInt(alphabet.length())));
         }
 
+        if(number > 1 || number > 100){
+
+        }
+
+        if(floorNumber < 1){
+
+        }
+
+        /*
         int number = new Random().nextInt(999) + 1;
         int bool = new Random().nextInt(2) + 1;
 
@@ -97,6 +106,8 @@ public class Person {
             String randomString = s[new Random().nextInt(s.length)];
             return sb + " " + number + ". " + floorNumber + " " + randomString + "." + " - "; //+cPostalCode + " " + cTownName;
         }
+         */
+        return null;
     }
 
     public String fakeCPR(String gender){
