@@ -4,21 +4,14 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.w3c.dom.ls.LSOutput;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.Date;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -33,7 +26,7 @@ public class Person {
     private String address;
     private LocalDate birthDate;
 
-    public Person() throws IOException, ParseException, SQLException, ClassNotFoundException {
+    public Person() throws IOException, ParseException{
         JSONObject jsonObject = parseJsonPerson();
         String name = (String) jsonObject.get("name");
         String surname = (String) jsonObject.get("surname");
@@ -42,10 +35,6 @@ public class Person {
         this.firstName = name;
         this.lastName = surname;
         this.gender = gender;
-        this.cpr = fakeCPR(gender);
-        this.phoneNumber = fakePhoneNumber();
-        //this.address = fakeAddress();
-        this.birthDate = birthDate();
     }
 
     public JSONObject parseJsonPerson() throws IOException, ParseException {
@@ -63,9 +52,9 @@ public class Person {
         return person;
     }
 
-    public String fakeAddress(int number, int floorNumber, String door) throws SQLException, ClassNotFoundException {
+    public String fakeAddress() throws SQLException, ClassNotFoundException {
         //Database connection
-        /*
+
         DatabaseConnection con = new DatabaseConnection("jdbc:mysql://localhost:3307/addresses");
 
         //Database query
@@ -75,7 +64,7 @@ public class Person {
         String cPostalCode = result.getString(1);
         String cTownName = result.getString(2);
         con.getConnection().close();
-         */
+
 
         String alphabet = "abcdefghijklmnopqrstuvwxyz";
 
@@ -85,33 +74,23 @@ public class Person {
             sb.append(alphabet.charAt(new Random().nextInt(alphabet.length())));
         }
 
-        if(number > 1 || number > 100){
-
-        }
-
-        if(floorNumber < 1){
-
-        }
-
-        /*
         int number = new Random().nextInt(999) + 1;
         int bool = new Random().nextInt(2) + 1;
 
         if(bool == 1){
             String upperLetter = String.valueOf(Character.toUpperCase(alphabet.charAt(new Random().nextInt(alphabet.length()))));
-            return sb + " " + number + upperLetter + " - "; //+cPostalCode + " " + cTownName;
+            this.address = sb + " " + number + upperLetter + " - " + cPostalCode + " " + cTownName;
         } else {
             int floorNumber = new Random().nextInt(99) + 1;
             String[] s = {"mv", "tv", "th"};
             String randomString = s[new Random().nextInt(s.length)];
-            return sb + " " + number + ". " + floorNumber + " " + randomString + "." + " - "; //+cPostalCode + " " + cTownName;
+            this.address = sb + " " + number + ". " + floorNumber + " " + randomString + "." + " - " + cPostalCode + " " + cTownName;
         }
-         */
-        return null;
+        return address;
     }
 
     public String fakeCPR(String gender){
-        LocalDate birthDate = birthDate();
+        LocalDate birthDate = fakeBirthDate();
         int i = 0;
         Random r = new Random();
 
@@ -127,18 +106,20 @@ public class Person {
             return null;
         }
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern( "ddMMuu" , Locale.UK );
+        this.cpr = dateTimeFormatter.format(birthDate) + "-" + i;
 
-        return dateTimeFormatter.format(birthDate) + "-" + i;
+        return cpr;
     }
 
-    public LocalDate birthDate(){
+    public LocalDate fakeBirthDate(){
         LocalDate startDate = LocalDate.of(1900, 1, 1);
 
         int days = (int) ChronoUnit.DAYS.between(startDate, LocalDate.now());
         Random random = new Random();
         int rDays = random.nextInt(days);
+        this.birthDate = startDate.plusDays(ThreadLocalRandom.current().nextInt(rDays));
 
-        return startDate.plusDays(ThreadLocalRandom.current().nextInt(rDays));
+        return birthDate;
     }
 
     public int fakePhoneNumber(){
@@ -167,7 +148,45 @@ public class Person {
             endDigit = String.format("%05d", new Random().nextInt(99999));
         }
 
-        return Integer.parseInt(String.valueOf(startDigit) +endDigit);
+        this.phoneNumber = Integer.parseInt(String.valueOf(startDigit) +endDigit);
+        return phoneNumber;
+    }
+
+    public String fakeNameAndGender(){
+        return "Full name: " + this.firstName + " " + this.lastName + "Gender: " + this.gender;
+    }
+
+    public String fakeNameGenderAndBirth(){
+        return fakeNameAndGender() + " Birth: " + fakeBirthDate();
+    }
+
+    public String fakeCprNameAndGender(){
+        return "CPR: " + fakeCPR(this.gender) + fakeNameAndGender();
+    }
+
+    public String fakeCprNameGenderAndBirth(){
+        return fakeCprNameAndGender() + " Birth: " + fakeBirthDate();
+    }
+
+    public String fakePersonAllInformation() throws SQLException, ClassNotFoundException {
+        return fakeCprNameGenderAndBirth() + "Address: " + fakeAddress() + " Phone number: " + fakePhoneNumber();
+    }
+
+    public List<Person> fakePersonInBulk(int numberOfPersons) throws IOException, ParseException, SQLException, ClassNotFoundException {
+
+        List<Person> fakePersonList = new ArrayList<>();
+
+        for (int i = 0; i < numberOfPersons; i++) {
+            Person person = new Person();
+            person.fakeBirthDate();
+            person.fakeAddress();
+            person.fakePhoneNumber();
+            person.fakeCPR(person.getGender());
+
+            fakePersonList.add(person);
+        }
+
+        return fakePersonList;
     }
 
     public String getFirstName() {
@@ -200,5 +219,17 @@ public class Person {
 
     public void setCpr(String cpr) {
         this.cpr = cpr;
+    }
+
+    public void setPhoneNumber(int phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
     }
 }

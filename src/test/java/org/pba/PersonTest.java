@@ -1,23 +1,16 @@
 package org.pba;
 
 import org.json.simple.parser.ParseException;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -77,6 +70,7 @@ class PersonTest {
     void birthDate_range1() {
         //Arrange ( -- done with setUp --)
         //Act - both actions should be executed together in a method
+        person.fakeBirthDate();
 
         boolean expected = person.getBirthDate().getYear() >= 1900;
         //Assert
@@ -88,7 +82,7 @@ class PersonTest {
     @RepeatedTest(value = 10)
     void birthDate_range2() {
         //Arrange ( -- done with setUp --)
-        LocalDate bDate = person.birthDate();
+        LocalDate bDate = person.fakeBirthDate();
         LocalDate now = LocalDate.now();
         Calendar date1 = new GregorianCalendar(bDate.getYear(),bDate.getMonthValue(),bDate.getDayOfMonth());
         Calendar date2 = new GregorianCalendar(now.getYear(),now.getMonthValue(),now.getDayOfMonth());
@@ -107,6 +101,7 @@ class PersonTest {
     void fakePhoneNumber() {
         //Arrange
         //Act - both actions should be executed together in a method
+        person.fakePhoneNumber();
         int actual = String.valueOf(person.getPhoneNumber()).length();
 
         int expected = 8;
