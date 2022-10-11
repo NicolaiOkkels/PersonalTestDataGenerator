@@ -156,17 +156,18 @@ public class Person {
 
         int i = new Random().nextInt(startDigitsCombinations.length);
         int startDigit = startDigitsCombinations[i];
-        int endDigit;
+        String endDigit;
+
 
         if(startDigit == 2){
-            endDigit = new Random().nextInt(9999999);
+            endDigit = String.format("%07d", new Random().nextInt(9999999));
         } else if(startDigit <= 93){
-            endDigit = new Random().nextInt(999999);
+            endDigit = String.format("%06d", new Random().nextInt(999999));
         } else{
-            endDigit = new Random().nextInt(99999);
+            endDigit = String.format("%05d", new Random().nextInt(99999));
         }
 
-        return Integer.parseInt(String.valueOf(startDigit) + String.valueOf(endDigit));
+        return Integer.parseInt(String.valueOf(startDigit) +endDigit);
     }
 
     public String getFirstName() {
