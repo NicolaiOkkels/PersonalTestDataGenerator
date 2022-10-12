@@ -24,7 +24,7 @@ public class Main {
             System.out.println("Input number of fake persons to generate between 2 - 100:");
             i = input.nextInt();
         }
-        System.out.println("Test jenkins2");
+
         CSVWriter csvWriter = new CSVWriter(new FileWriter("personal-test-data.csv"));
 
         Person person = new Person();
